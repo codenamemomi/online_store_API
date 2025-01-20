@@ -8,6 +8,7 @@ This is an online store API built with Django. It provides endpoints for managin
 - Product management (CRUD operations)
 - Order management (CRUD operations)
 - API documentation with Django REST framework
+- Role-based access control (Admin and Customer)
 
 ## Requirements
 
@@ -62,16 +63,29 @@ This is an online store API built with Django. It provides endpoints for managin
 
 ## API Endpoints
 
-- `GET /api/products/` - List all products
-- `POST /api/products/` - Create a new product
-- `GET /api/products/{id}/` - Retrieve a product by ID
-- `PUT /api/products/{id}/` - Update a product by ID
-- `DELETE /api/products/{id}/` - Delete a product by ID
-- `GET /api/orders/` - List all orders
-- `POST /api/orders/` - Create a new order
-- `GET /api/orders/{id}/` - Retrieve an order by ID
-- `PUT /api/orders/{id}/` - Update an order by ID
-- `DELETE /api/orders/{id}/` - Delete an order by ID
+Products
+
+- GET /api/products/: List all products (accessible by customers and admins)
+- POST /api/products/: Create a new product (accessible by admins)
+- GET /api/products/{id}/: Retrieve a product by ID (accessible by customers and admins)
+- PATCH /api/products/{id}/: Update a product by ID (accessible by admins)
+- DELETE /api/products/{id}/: Delete a product by ID (accessible by admins)
+
+Categories
+
+- GET /api/categories/: List all categories (accessible by customers and admins)
+- POST /api/categories/: Create a new category (accessible by admins)
+- GET /api/categories/{id}/: Retrieve a category by ID (accessible by customers and admins)
+- PATCH /api/categories/{id}/: Update a category by ID (accessible by admins)
+- DELETE /api/categories/{id}/: Delete a category by ID (accessible by admins)
+
+Permissions
+
+- Admin: Can create, update, and delete products and categories.
+- Customer: Can view products and categories.
+
+Testing
+- You can use tools like Postman or curl to test the API endpoints.
 
 ## Contributing
 
