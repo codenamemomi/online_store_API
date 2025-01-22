@@ -29,7 +29,7 @@ This is an online store API built with Django. It provides endpoints for managin
 
     ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    Windows use `venv\Scripts\activate  #on Mac source venv/bin/activate  
     ```
 
 3. Install the dependencies:
@@ -58,7 +58,7 @@ This is an online store API built with Django. It provides endpoints for managin
 
 ## Usage
 
-- Access the API at `http://127.0.0.1:8000/api/`
+- Access the API at `http://127.0.0.1:8000/store/`
 - Access the admin panel at `http://127.0.0.1:8000/admin/`
 
 ## API Endpoints
