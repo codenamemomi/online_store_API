@@ -65,32 +65,32 @@ This is an online store API built with Django. It provides endpoints for managin
 
 ### Products
 
-- GET /api/products/: List all products (accessible by customers and admins)
-- POST /api/products/: Create a new product (accessible by admins)
-- GET /api/products/{id}/: Retrieve a product by ID (accessible by customers and admins)
-- PATCH /api/products/{id}/: Update a product by ID (accessible by admins)
-- DELETE /api/products/{id}/: Delete a product by ID (accessible by admins)
+- GET /store/products/: List all products (accessible by customers and admins)
+- POST /store/products/: Create a new product (accessible by admins)
+- GET /store/products/{id}/: Retrieve a product by ID (accessible by customers and admins)
+- PATCH /store/products/{id}/: Update a product by ID (accessible by admins)
+- DELETE /store/products/{id}/: Delete a product by ID (accessible by admins)
 
 ### Categories
 
-- GET /api/categories/: List all categories (accessible by customers and admins)
-- POST /api/categories/: Create a new category (accessible by admins)
-- GET /api/categories/{id}/: Retrieve a category by ID (accessible by customers and admins)
-- PATCH /api/categories/{id}/: Update a category by ID (accessible by admins)
-- DELETE /api/categories/{id}/: Delete a category by ID (accessible by admins)
+- GET /store/categories/: List all categories (accessible by customers and admins)
+- POST /store/categories/: Create a new category (accessible by admins)
+- GET /store/categories/{id}/: Retrieve a category by ID (accessible by customers and admins)
+- PATCH /store/categories/{id}/: Update a category by ID (accessible by admins)
+- DELETE /store/categories/{id}/: Delete a category by ID (accessible by admins)
 
 ### Cart
 
-- POST /api/cart/: Add a product to the cart (accessible by customers and admins)
-- GET /api/cart/: Retrieve the cart for the authenticated user (accessible by customers and admins)
-- PATCH /api/cart/: Update the quantity of a product in the cart (accessible by customers and admins)
-- DELETE /api/cart/: Remove a product from the cart (accessible by customers and admins)
+- POST /store/cart/: Add a product to the cart (accessible by customers and admins)
+- GET /store/cart/: Retrieve the cart for the authenticated user (accessible by customers and admins)
+- PATCH /store/cart/: Update the quantity of a product in the cart (accessible by customers and admins)
+- DELETE /store/cart/: Remove a product from the cart (accessible by customers and admins)
 
 ### Orders
 
-- POST /api/orders/: Place an order using the products in the cart (accessible by customers and admins)
-- GET /api/orders/{order_id}/: Retrieve an order by ID (accessible by customers and admins)
-- PATCH /api/orders/{order_id}/: Update the status of an order by ID (accessible by admins)
+- POST /store/orders/: Place an order using the products in the cart (accessible by customers and admins)
+- GET /store/orders/{order_id}/: Retrieve an order by ID (accessible by customers and admins)
+- PATCH /store/orders/{order_id}/: Update the status of an order by ID (accessible by admins)
 
 ### Permissions
 
