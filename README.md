@@ -63,7 +63,7 @@ This is an online store API built with Django. It provides endpoints for managin
 
 ## API Endpoints
 
-Products
+### Products
 
 - GET /api/products/: List all products (accessible by customers and admins)
 - POST /api/products/: Create a new product (accessible by admins)
@@ -71,7 +71,7 @@ Products
 - PATCH /api/products/{id}/: Update a product by ID (accessible by admins)
 - DELETE /api/products/{id}/: Delete a product by ID (accessible by admins)
 
-Categories
+### Categories
 
 - GET /api/categories/: List all categories (accessible by customers and admins)
 - POST /api/categories/: Create a new category (accessible by admins)
@@ -79,7 +79,20 @@ Categories
 - PATCH /api/categories/{id}/: Update a category by ID (accessible by admins)
 - DELETE /api/categories/{id}/: Delete a category by ID (accessible by admins)
 
-Permissions
+### Cart
+
+- POST /api/cart/: Add a product to the cart (accessible by customers and admins)
+- GET /api/cart/: Retrieve the cart for the authenticated user (accessible by customers and admins)
+- PATCH /api/cart/: Update the quantity of a product in the cart (accessible by customers and admins)
+- DELETE /api/cart/: Remove a product from the cart (accessible by customers and admins)
+
+### Orders
+
+- POST /api/orders/: Place an order using the products in the cart (accessible by customers and admins)
+- GET /api/orders/{order_id}/: Retrieve an order by ID (accessible by customers and admins)
+- PATCH /api/orders/{order_id}/: Update the status of an order by ID (accessible by admins)
+
+### Permissions
 
 - Admin: Can create, update, and delete products and categories.
 - Customer: Can view products and categories.
