@@ -38,19 +38,31 @@ This is an online store API built with Django. It provides endpoints for managin
     pip install -r requirements.txt
     ```
 
-4. Apply migrations:
+4. Set up environment variables:
+
+    Create a [.env](http://_vscodecontentref_/2) file in the root of your project and add your PayPal credentials:
+
+    ```env
+    PAYPAL_MODE=sandbox
+    PAYPAL_CLIENT_ID=your_paypal_client_id
+    PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+    ```
+    You can get your PayPal credentials from the [PayPal Developer Dashboard](https://developer.paypal)
+    .
+
+5. Apply migrations:
 
     ```bash
     python manage.py migrate
     ```
 
-5. Create a superuser:
+6. Create a superuser:
 
     ```bash
     python manage.py createsuperuser
     ```
 
-6. Run the development server:
+7. Run the development server:
 
     ```bash
     python manage.py runserver
@@ -91,6 +103,14 @@ This is an online store API built with Django. It provides endpoints for managin
 - POST /store/orders/: Place an order using the products in the cart (accessible by customers and admins)
 - GET /store/orders/{order_id}/: Retrieve an order by ID (accessible by customers and admins)
 - PATCH /store/orders/{order_id}/: Update the status of an order by ID (accessible by admins)
+
+### Payments
+
+- POST /store/create/payments/: Create a payment and get the approval URL (accessible by customers)
+- GET /store/execute/payment/(link from redirection after payment is done): Execute a payment after approval (accessible by customers)
+- GET /store/payments/: Retrieve a payment lists (accessible by admins)
+- GET /store/payment/{payment_id}/: Retrieve a payment by ID (accessible by admins)
+- DELETE /store/payment/{payment_id}/: Delete a payment by ID (accessible by admins)
 
 ### Permissions
 

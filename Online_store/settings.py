@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'cart',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +154,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+load_dotenv()
+
+PAYPAL_MODE = os.getenv('PAYPAL_MODE')  # sandbox or live
+PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET')
