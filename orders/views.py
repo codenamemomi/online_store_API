@@ -7,7 +7,7 @@ from users.permissions import IsAdminOrIsCustomer, IsCustomer
 from users.permissions import IsAdminUser as IsAdmin
 from rest_framework import status
 from cart.models import Cart
-
+from payments.models import Payment
 # Create your views here.
 
 class PlaceOrderView(APIView):
@@ -44,7 +44,7 @@ class PlaceOrderView(APIView):
         cart.save()
 
         serializer = OrderSerializer(order)
-        return Response({"message": "Order placed successfully", 'data': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Order placed successfully\nMove on to PAYMENT" , 'data': serializer.data}, status=status.HTTP_201_CREATED)
     
     
 
@@ -82,6 +82,11 @@ class OrderViewDetail(APIView):
         
         current_status = order.status
         new_status = request.data.get('status')
+
+        payment_made = Payment.objects.filter(order=order, payment_status= 'approved').exists()
+
+        if current_status == "Pending" and not payment_made:
+            return Response({"error": "Order status cannot be updated until payment is made"}, status=status.HTTP_400_BAD_REQUEST)
 
         if current_status == "pending" and new_status not in ["shipped", "delivered"]:
             return Response({"error": "Order status cannot be updated"}, status=status.HTTP_400_BAD_REQUEST)
