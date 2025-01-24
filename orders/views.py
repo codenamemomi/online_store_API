@@ -32,19 +32,27 @@ class PlaceOrderView(APIView):
         )
 
         for cart_item in cart.items.all():
+            product = cart_item.product
+            if product.stock < cart_item.quantity:
+                return Response({"error": f"Not enough stock for {product.name}"}, status=status.HTTP_400_BAD_REQUEST)
+            
             OrderItem.objects.create(
                 order=order,
-                product=cart_item.product,
+                product=product,
                 quantity=cart_item.quantity,
                 price=cart_item.price
             )
+            
+            # Reduce the product's stock quantity
+            product.stock -= cart_item.quantity
+            product.save()
 
         cart.items.all().delete()
         cart.total_price = 0
         cart.save()
 
         serializer = OrderSerializer(order)
-        return Response({"message": "Order placed successfully\nMove on to PAYMENT" , 'data': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Order placed successfully\nMove on to PAYMENT", 'data': serializer.data}, status=status.HTTP_201_CREATED)
     
     
 

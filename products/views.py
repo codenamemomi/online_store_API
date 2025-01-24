@@ -20,7 +20,7 @@ class ProductList(APIView):
     def get(self, request):
         products = Product.objects.all()
         serializer = productSerializer(products, many=True)
-        return Response({'message': 'product is in stock', 'data': serializer.data}, status=status.HTTP_200_OK)
+        return Response({'message': 'products in stock', 'data': serializer.data}, status=status.HTTP_200_OK)
     
     def post(self, request):
         serializer = productSerializer(data=request.data)
@@ -52,9 +52,13 @@ class ProductDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, id):
-        product = Product.objects.get(id=id)
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            return Response({'message': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         product.delete()
-        return Response('product has been deleted', status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Product has been deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CategoryList(APIView):
@@ -86,7 +90,11 @@ class CategoryDetail(APIView):
 
 
     def get(self, request, id):
-        category = Category.objects.get(id=id)
+        try:
+            category = Category.objects.get(id=id)
+        except Category.DoesNotExist:
+            return Response({'message': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         serializer = categorySerializer(category)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -98,14 +106,21 @@ class CategoryDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self, request, id):
-        category = Category.objects.get(id=id)
-        serializer = categorySerializer(category, data=request.data)
+        try:
+            category = Category.objects.get(id=id)
+        except Category.DoesNotExist:
+            return Response({'message': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = categorySerializer(category, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, id):
-        category = Category.objects.get(id=id)
-        category.delete()
-        return Response('category has been deleted', status=status.HTTP_204_NO_CONTENT)
+        try:
+            category = Category.objects.get(id=id)
+            category.delete()
+            return Response('category has been deleted', status=status.HTTP_204_NO_CONTENT)
+        except Category.DoesNotExist:
+            return Response({'message': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
