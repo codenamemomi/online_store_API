@@ -25,3 +25,11 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} Item {self.product.name} item category {self.product.category} of order {self.order.order_id}"
     
+
+class AdminNotification(models.Model):
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='notifications')
+
+    def __str__(self):
+        return f"Notification for Order {self.order.id} by user: {self.order.user.email} - {self.created_at}"

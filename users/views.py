@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework import permissions
 from .permissions import IsAdminUser as IsAdmin
+from orders.models import AdminNotification
 # Create your views here.
 
 class RegisterationView(APIView):
@@ -44,8 +45,9 @@ class LoginView(APIView):
         return Response({'token': str(token)}, status=status.HTTP_200_OK)
     
 
-class AdminOnlyView(APIView):
+class AdminNotificationView(APIView):
     permission_classes = [IsAdmin]
 
     def get(self, request):
-        return Response('This is an admin only page', status=status.HTTP_200_OK)
+        notifications = AdminNotification.objects.all()
+        return Response(notifications, status=status.HTTP_200_OK)
