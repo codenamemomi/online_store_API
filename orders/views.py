@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from django.utils.timezone import now
+from datetime import timedelta
 from rest_framework.views import APIView
-from .models import Order, OrderItem, Product
+from .models import Order, OrderItem, Product, AdminNotification, CustomUser
 from .serializers import OrderSerializer, OrderItemSerializer
 from users.permissions import IsAdminOrIsCustomer, IsCustomer
 from users.permissions import IsAdminUser as IsAdmin
@@ -33,7 +35,7 @@ class PlaceOrderView(APIView):
 
         for cart_item in cart.items.all():
             product = cart_item.product
-            if product.stock < cart_item.quantity:
+            if product.stock_quantity < cart_item.quantity:
                 return Response({"error": f"Not enough stock for {product.name}"}, status=status.HTTP_400_BAD_REQUEST)
             
             OrderItem.objects.create(
@@ -44,8 +46,17 @@ class PlaceOrderView(APIView):
             )
             
             # Reduce the product's stock quantity
-            product.stock -= cart_item.quantity
+            product.stock_quantity -= cart_item.quantity
             product.save()
+
+            admin_users = CustomUser.objects.filter(is_staff=True)  # Get all admin users
+        for admin in admin_users:
+            AdminNotification.objects.create(
+                admin=admin,
+                order=order,
+                message=f"New order placed by {user.email} - Order ID: {order.order_id}",
+            )
+
 
         cart.items.all().delete()
         cart.total_price = 0
@@ -61,9 +72,15 @@ class OrderView(APIView):
 
     def get(self, request):
         user = request.user
-        orders = Order.objects.filter(user=user)
+        
+        if user.is_staff:  # ✅ Admin can see all orders
+            orders = Order.objects.all()
+        else:  # ✅ Regular users see only their own orders
+            orders = Order.objects.filter(user=user)
+
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class OrderViewDetail(APIView):

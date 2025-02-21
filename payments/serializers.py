@@ -7,7 +7,8 @@ from users.models import CustomUser
 class PaymentSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+    user = serializers.StringRelatedField()
 
     class Meta:
         model = Payment
-        fields = '__all__'
+        fields = ('user', 'order', 'amount', 'payment_method', 'payment_status',)

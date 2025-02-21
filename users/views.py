@@ -8,6 +8,11 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework import permissions
 from .permissions import IsAdminUser as IsAdmin
+from rest_framework import generics, status
+from orders.models import AdminNotification
+from orders.serializers import AdminNotificationSerializer
+from django.utils.timezone import now
+from datetime import timedelta
 # Create your views here.
 
 class RegisterationView(APIView):
@@ -44,8 +49,32 @@ class LoginView(APIView):
         return Response({'token': str(token)}, status=status.HTTP_200_OK)
     
 
-class AdminOnlyView(APIView):
+class AdminNotificationListView(generics.ListAPIView):
+    """ Retrieve admin notifications and mark them as viewed. """
     permission_classes = [IsAdmin]
+    serializer_class = AdminNotificationSerializer
 
-    def get(self, request):
-        return Response('This is an admin only page', status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return AdminNotification.objects.filter(admin=self.request.user).order_by("-created_at")
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        # ✅ Mark notifications as viewed
+        for notification in queryset:
+            if not notification.viewed_at:
+                notification.viewed_at = now()
+                notification.save()
+
+        # ✅ Debugging: Print viewed notifications
+        print("Viewed notifications:", queryset.filter(viewed_at__isnull=False))
+
+        # ✅ Delete notifications viewed for more than 5 minutes
+        five_minutes_ago = now() - timedelta(minutes=5)
+        deleted_count, _ = AdminNotification.objects.filter(viewed_at__lte=five_minutes_ago).delete()
+
+        # ✅ Debugging: Print deleted count
+        print(f"Deleted {deleted_count} notifications")
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

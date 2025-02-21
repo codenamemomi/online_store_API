@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import CustomUser
 from products.models import Product
+from django.utils.timezone import now
 # Create your models here.
 
 
@@ -25,3 +26,15 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} Item {self.product.name} item category {self.product.category} of order {self.order.order_id}"
     
+
+class AdminNotification(models.Model):
+    admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="notifications")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    viewed_at = models.DateTimeField(null=True, blank=True)  # Time when admin views the notification
+
+    def mark_as_viewed(self):
+        """ Mark the notification as viewed and schedule deletion. """
+        self.timestamp = now()
+        self.save()

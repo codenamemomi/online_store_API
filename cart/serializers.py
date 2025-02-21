@@ -3,13 +3,15 @@ from .models import CartItem , Cart
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    product = serializers.StringRelatedField()
     class Meta:
         model = CartItem
-        fields = '__all__'
+        fields = ('product', 'quantity', 'price', 'cart', 'id')
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many = True, read_only= True)
+    user = serializers.StringRelatedField()
     
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ('user', 'items', 'total_price')
