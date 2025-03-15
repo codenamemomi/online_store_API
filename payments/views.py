@@ -6,6 +6,7 @@ from .models import Payment
 from .serializers import PaymentSerializer
 from orders.models import Order
 from orders.serializers import OrderSerializer
+from users.authentication import CookieJWTAuthentication
 from users.permissions import IsAdminOrIsCustomer, IsAdminUser, IsCustomer
 import paypalrestsdk
 import os
@@ -65,6 +66,7 @@ class CreatePaymentView(APIView):
         
 
 class ExecutePaymentView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAdminOrIsCustomer]
     
     def get(self, request):

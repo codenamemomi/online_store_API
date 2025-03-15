@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer
 from django.shortcuts import render
 from rest_framework import permissions
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -30,6 +30,12 @@ class RegisterationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from django.contrib.auth import authenticate
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from rest_framework.views import APIView
+
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -39,16 +45,38 @@ class LoginView(APIView):
         password = data.get('password', None)
 
         if email is None or password is None:
-            return Response('Please input both email and password', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Please input both email and password'}, status=status.HTTP_400_BAD_REQUEST)
         
         user = authenticate(email=email, password=password)
         
         if user is None:
-            return Response('Invalid credentials', status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_404_NOT_FOUND)
         
-        token = AccessToken.for_user(user)
-        return Response({'token': str(token)}, status=status.HTTP_200_OK)
-    
+        access_token = AccessToken.for_user(user)
+        refresh_token = RefreshToken.for_user(user)
+
+        response = Response({
+            'message': f"{user} logged in successfully",
+            'access_token': str(access_token),
+            'refresh_token': str(refresh_token),
+        }, status=status.HTTP_200_OK)  
+
+        response.set_cookie(
+            key='access_token',
+            value=str(access_token),
+            httponly=True,
+            samesite='None',  
+            secure=True  
+        )
+        response.set_cookie(
+            key='refresh_token',
+            value=str(refresh_token),
+            httponly=True,
+            samesite='None',
+            secure=True
+        )
+        return response  
+
 
 class AdminNotificationView(APIView):
     permission_classes = [IsAdmin]
@@ -59,3 +87,13 @@ class AdminNotificationView(APIView):
         if not notifications.exists():
             return Response('No notifications', status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        response = Response('Logout successful', status=status.HTTP_200_OK)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response
