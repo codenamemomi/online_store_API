@@ -39,13 +39,7 @@ class PlaceOrderView(APIView):
 
         for cart_item in cart.items.all():
             product = cart_item.product
-<<<<<<< HEAD
-            if product.stock_quantity < cart_item.quantity:
-                return Response({"error": f"Not enough stock for {product.name}"}, status=status.HTTP_400_BAD_REQUEST)
-            
-=======
            
->>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
             OrderItem.objects.create(
                 order=order,
                 product=product,
@@ -53,22 +47,6 @@ class PlaceOrderView(APIView):
                 price=cart_item.price
             )
             
-<<<<<<< HEAD
-            # Reduce the product's stock quantity
-            product.stock_quantity -= cart_item.quantity
-            product.save()
-
-            admin_users = CustomUser.objects.filter(is_staff=True)  # Get all admin users
-        for admin in admin_users:
-            AdminNotification.objects.create(
-                admin=admin,
-                order=order,
-                message=f"New order placed by {user.email} - Order ID: {order.order_id}",
-            )
-
-
-=======
->>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
         cart.items.all().delete()
         cart.total_price = 0
         cart.save()

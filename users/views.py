@@ -8,15 +8,12 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework import permissions
 from .permissions import IsAdminUser as IsAdmin
-<<<<<<< HEAD
 from rest_framework import generics, status
 from orders.models import AdminNotification
 from orders.serializers import AdminNotificationSerializer
 from django.utils.timezone import now
 from datetime import timedelta
-=======
 from orders.models import AdminNotification
->>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
 # Create your views here.
 
 class RegisterationView(APIView):
@@ -53,38 +50,12 @@ class LoginView(APIView):
         return Response({'token': str(token)}, status=status.HTTP_200_OK)
     
 
-<<<<<<< HEAD
-class AdminNotificationListView(generics.ListAPIView):
-    """ Retrieve admin notifications and mark them as viewed. """
-=======
 class AdminNotificationView(APIView):
->>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
     permission_classes = [IsAdmin]
-    serializer_class = AdminNotificationSerializer
-
-<<<<<<< HEAD
-    def get_queryset(self):
-        return AdminNotification.objects.filter(admin=self.request.user).order_by("-created_at")
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-
-        for notification in queryset:
-            if not notification.viewed_at:
-                notification.viewed_at = now()
-                notification.save()
-
-        print("Viewed notifications:", queryset.filter(viewed_at__isnull=False))
-
-        five_minutes_ago = now() - timedelta(minutes=5)
-        deleted_count, _ = AdminNotification.objects.filter(viewed_at__lte=five_minutes_ago).delete()
-
-        print(f"Deleted {deleted_count} notifications")
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-=======
+    
     def get(self, request):
-        notifications = AdminNotification.objects.all()
-        return Response(notifications, status=status.HTTP_200_OK)
->>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
+        notifications = AdminNotification.objects.filter(created_at__gte=now()-timedelta(days=7))
+        serializer = AdminNotificationSerializer(notifications, many=True)
+        if not notifications.exists():
+            return Response('No notifications', status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data, status=status.HTTP_200_OK)

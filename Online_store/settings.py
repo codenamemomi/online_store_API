@@ -44,12 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'rest_framework',
+    # 'drf_spectacular',
+    # 'drf_spectacular_sidecar',
     'users',
     'products',
     'orders',
     'cart',
     'payments',
-    'receipt',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +72,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -79,6 +81,14 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# SPECTACULAR_SETTINGS = {
+#     "TITLE": "Online Store API",
+#     "DESCRIPTION": "API for Online Store",
+#     "VERSION": "1.0.0",
+#     "SERVE_INCLUDE_SCHEMA": False,
+# }
+
 
 ROOT_URLCONF = 'Online_store.urls'
 
