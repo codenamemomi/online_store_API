@@ -26,18 +26,26 @@ class PlaceOrderView(APIView):
         if not cart.items.exists():
             return Response({"error": "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
         
+        shipping_address = request.data.get('shipping_address')
+        if not shipping_address:
+            return Response({"error": "Shipping address is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
         order = Order.objects.create(
             user=user,
             total_price=cart.total_price,
             status="Pending",
-            shipping_address=request.data.get('shipping_address', '')
+            shipping_address=shipping_address
         )
 
         for cart_item in cart.items.all():
             product = cart_item.product
+<<<<<<< HEAD
             if product.stock_quantity < cart_item.quantity:
                 return Response({"error": f"Not enough stock for {product.name}"}, status=status.HTTP_400_BAD_REQUEST)
             
+=======
+           
+>>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
             OrderItem.objects.create(
                 order=order,
                 product=product,
@@ -45,6 +53,7 @@ class PlaceOrderView(APIView):
                 price=cart_item.price
             )
             
+<<<<<<< HEAD
             # Reduce the product's stock quantity
             product.stock_quantity -= cart_item.quantity
             product.save()
@@ -58,13 +67,14 @@ class PlaceOrderView(APIView):
             )
 
 
+=======
+>>>>>>> 50f05e1d4826d0bf25bedac2f3546483ee2234ca
         cart.items.all().delete()
         cart.total_price = 0
         cart.save()
 
         serializer = OrderSerializer(order)
         return Response({"message": "Order placed successfully\nMove on to PAYMENT", 'data': serializer.data}, status=status.HTTP_201_CREATED)
-    
     
 
 class OrderView(APIView):

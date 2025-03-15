@@ -29,18 +29,28 @@ class AddToCartView(APIView):
         if not created:
             new_quantity = cart_item.quantity + int(quantity)
             if new_quantity <= 0:
+                product.stock_quantity += cart_item.quantity  # Restore stock when item is removed from cart
                 cart_item.delete()
             else:
+                if product.stock_quantity < int(quantity):
+                    return Response({"error": "Not enough stock available"}, status=status.HTTP_400_BAD_REQUEST)
+                
+                product.stock_quantity -= int(quantity)  # Reduce stock when quantity is increased
                 cart_item.quantity = new_quantity
                 cart_item.save()
         else:
             if int(quantity) > 0:
+                if product.stock_quantity < int(quantity):
+                    return Response({"error": "Not enough stock available"}, status=status.HTTP_400_BAD_REQUEST)
+                product.stock_quantity -= int(quantity)  # Reduce stock when new item is added to cart
                 cart_item.quantity = int(quantity)
                 cart_item.save()
             else:
                 return Response({"error": "Quantity must be greater than zero for new items"}, status=status.HTTP_400_BAD_REQUEST)
 
+        product.save()  # Save the updated stock quantity
         serializer = CartSerializer(cart)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
