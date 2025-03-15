@@ -60,20 +60,16 @@ class AdminNotificationListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
 
-        # ✅ Mark notifications as viewed
         for notification in queryset:
             if not notification.viewed_at:
                 notification.viewed_at = now()
                 notification.save()
 
-        # ✅ Debugging: Print viewed notifications
         print("Viewed notifications:", queryset.filter(viewed_at__isnull=False))
 
-        # ✅ Delete notifications viewed for more than 5 minutes
         five_minutes_ago = now() - timedelta(minutes=5)
         deleted_count, _ = AdminNotification.objects.filter(viewed_at__lte=five_minutes_ago).delete()
 
-        # ✅ Debugging: Print deleted count
         print(f"Deleted {deleted_count} notifications")
 
         serializer = self.get_serializer(queryset, many=True)
