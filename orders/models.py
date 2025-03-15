@@ -28,13 +28,9 @@ class OrderItem(models.Model):
     
 
 class AdminNotification(models.Model):
-    admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="notifications")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    viewed_at = models.DateTimeField(null=True, blank=True)  # Time when admin views the notification
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='notifications')
 
-    def mark_as_viewed(self):
-        """ Mark the notification as viewed and schedule deletion. """
-        self.timestamp = now()
-        self.save()
+    def __str__(self):
+        return f"Notification for Order {self.order.id} by user: {self.order.user.email} - {self.created_at}"
