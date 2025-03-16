@@ -1,0 +1,965 @@
+openapi: 3.0.3
+info:
+  title: Online Store API
+  version: 1.0.0
+  description: API for Online Store
+paths:
+  /store/admin/Notifications/:
+    get:
+      operationId: get_notifications
+      tags:
+      - admin
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminNotification'
+          description: ''
+  /store/cart/:
+    post:
+      operationId: add_to_cart
+      tags:
+      - cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Cart'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: ''
+  /store/cart/detail/:
+    get:
+      operationId: view_cart
+      tags:
+      - cart
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: ''
+    patch:
+      operationId: modify_cart
+      tags:
+      - cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCart'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCart'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCart'
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: ''
+    delete:
+      operationId: delete_cart_item
+      tags:
+      - cart
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '204':
+          description: No response body
+  /store/categories/:
+    get:
+      operationId: category_list
+      tags:
+      - categories
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+          description: ''
+    post:
+      operationId: category_create
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/category'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+          description: ''
+  /store/categories/{id}/:
+    get:
+      operationId: category_detail
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - categories
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+          description: ''
+    post:
+      operationId: create_category
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/category'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+          description: ''
+    patch:
+      operationId: edit_category
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patchedcategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Patchedcategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Patchedcategory'
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+          description: ''
+    delete:
+      operationId: delete_category
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - categories
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '204':
+          description: No response body
+  /store/create/payment/:
+    post:
+      operationId: create_payment
+      tags:
+      - create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /store/execute/payment/:
+    get:
+      operationId: execute_payment
+      tags:
+      - execute
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /store/login/:
+    post:
+      operationId: login_user
+      tags:
+      - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /store/logout/:
+    post:
+      operationId: logout_user
+      tags:
+      - logout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /store/order/:
+    get:
+      operationId: view_orders
+      tags:
+      - order
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /store/order/{order_id}/:
+    get:
+      operationId: order_detail
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - order
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+    patch:
+      operationId: update_order
+      parameters:
+      - in: path
+        name: order_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrder'
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /store/payment/{id}/:
+    get:
+      operationId: payment_detail
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - payment
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+    delete:
+      operationId: delete_payment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - payment
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '204':
+          description: No response body
+  /store/payments/:
+    get:
+      operationId: payment_list
+      tags:
+      - payments
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /store/place_order/:
+    post:
+      operationId: place_order
+      tags:
+      - place_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Order'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /store/products/:
+    get:
+      operationId: product_list
+      tags:
+      - products
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+          description: ''
+    post:
+      operationId: add_product
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/product'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/product'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+          description: ''
+  /store/products/{id}/:
+    get:
+      operationId: product_detail
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - products
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+          description: ''
+    patch:
+      operationId: edit_product
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patchedproduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Patchedproduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Patchedproduct'
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+          description: ''
+    delete:
+      operationId: delete_product
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - products
+      security:
+      - cookieJWTAuth: []
+      responses:
+        '204':
+          description: No response body
+  /store/register/:
+    post:
+      operationId: register_user
+      tags:
+      - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieJWTAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+components:
+  schemas:
+    AdminNotification:
+      type: object
+      properties:
+        admin:
+          type: string
+          readOnly: true
+        order:
+          type: string
+          readOnly: true
+        message:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - admin
+      - created_at
+      - message
+      - order
+    Cart:
+      type: object
+      properties:
+        user:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+          readOnly: true
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - items
+      - user
+    CartItem:
+      type: object
+      properties:
+        product:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        cart:
+          type: integer
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - cart
+      - id
+      - product
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        status:
+          type: string
+          maxLength: 255
+        shipping_address:
+          type: string
+        order_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+      required:
+      - order_id
+      - order_items
+      - shipping_address
+      - user
+    OrderItem:
+      type: object
+      properties:
+        product:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        order:
+          type: integer
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - order
+      - product
+    PatchedCart:
+      type: object
+      properties:
+        user:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+          readOnly: true
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+    PatchedOrder:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        status:
+          type: string
+          maxLength: 255
+        shipping_address:
+          type: string
+        order_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+    Patchedcategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/product'
+          readOnly: true
+    Patchedproduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        stock_quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        category:
+          type: integer
+        image:
+          type: string
+          format: uri
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_available:
+          type: boolean
+    Payment:
+      type: object
+      properties:
+        user:
+          type: string
+          readOnly: true
+        order:
+          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethodEnum'
+        payment_status:
+          type: string
+          maxLength: 255
+      required:
+      - amount
+      - order
+      - user
+    PaymentMethodEnum:
+      enum:
+      - PAYPAL
+      - CASH
+      type: string
+      description: |-
+        * `PAYPAL` - Paypal
+        * `CASH` - Cash
+    RoleEnum:
+      enum:
+      - customer
+      - admin
+      type: string
+      description: |-
+        * `customer` - Customer
+        * `admin` - Admin
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+        confirm_password:
+          type: string
+          writeOnly: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        groups:
+          type: array
+          items:
+            type: integer
+          description: The groups this user belongs to. A user will get all permissions
+            granted to each of their groups.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+          description: Specific permissions for this user.
+      required:
+      - confirm_password
+      - email
+      - first_name
+      - id
+      - last_name
+      - password
+    category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/product'
+          readOnly: true
+      required:
+      - description
+      - id
+      - name
+      - products
+    product:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        stock_quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        category:
+          type: integer
+        image:
+          type: string
+          format: uri
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_available:
+          type: boolean
+      required:
+      - category
+      - description
+      - id
+      - image
+      - name
+      - price
+      - stock_quantity
+      - updated_at
+  securitySchemes:
+    cookieJWTAuth:
+      type: apiKey
+      in: cookie
+      name: access_token
+      description: JWT token authentication using HTTP-only cookies.

@@ -28,4 +28,4 @@ class AdminNotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AdminNotification
-        fields = ('admin', 'order', 'message', 'created_at', 'viewed_at')
+        fields = ('admin', 'order', 'message', 'created_at')

@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from django.utils.timezone import now
 from datetime import timedelta
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from .models import Order, OrderItem, Product, AdminNotification, CustomUser
 from .serializers import OrderSerializer, OrderItemSerializer
 from users.permissions import IsAdminOrIsCustomer, IsCustomer
@@ -10,12 +11,14 @@ from users.permissions import IsAdminUser as IsAdmin
 from rest_framework import status
 from cart.models import Cart
 from payments.models import Payment
+from drf_spectacular.utils import extend_schema
 # Create your views here.
-
-class PlaceOrderView(APIView):
+@extend_schema(tags=['Orders'])
+class PlaceOrderView(GenericAPIView):
     permission_classes = [IsAdminOrIsCustomer]
+    serializer_class = OrderSerializer
 
-
+    @extend_schema(operation_id='place_order')
     def post(self, request):
         user = request.user
         try:
@@ -54,10 +57,12 @@ class PlaceOrderView(APIView):
         serializer = OrderSerializer(order)
         return Response({"message": "Order placed successfully\nMove on to PAYMENT", 'data': serializer.data}, status=status.HTTP_201_CREATED)
     
-
-class OrderView(APIView):
+@extend_schema(tags=['Orders'])
+class OrderView(GenericAPIView):
     permission_classes = [IsAdminOrIsCustomer]
+    serializer_class = OrderSerializer
 
+    @extend_schema(operation_id='view_orders')
     def get(self, request):
         user = request.user
         
@@ -70,13 +75,15 @@ class OrderView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-class OrderViewDetail(APIView):
+@extend_schema(tags=['Orders'])
+class OrderViewDetail(GenericAPIView):
+    serializer_class = OrderSerializer
     def get_permissions(self):
             if self.request.method in [ 'PATCH']:
                 return [IsAdmin()]
             return [IsAdminOrIsCustomer()]
 
+    @extend_schema(operation_id='order_detail')
     def get(self, request, order_id):
         try:
             order = Order.objects.get(order_id=order_id)
@@ -86,6 +93,7 @@ class OrderViewDetail(APIView):
         serializer = OrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @extend_schema(operation_id='update_order')
     def patch(self, request, order_id):
 
         try:

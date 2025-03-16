@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'rest_framework',
-    # 'drf_spectacular',
-    # 'drf_spectacular_sidecar',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     'users',
     'products',
     'orders',
@@ -72,7 +72,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -86,12 +86,22 @@ SIMPLE_JWT = {
     'COOKIE_NAME': 'access_token',
 }
 
-# SPECTACULAR_SETTINGS = {
-#     "TITLE": "Online Store API",
-#     "DESCRIPTION": "API for Online Store",
-#     "VERSION": "1.0.0",
-#     "SERVE_INCLUDE_SCHEMA": False,
-# }
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Online Store API",
+    "DESCRIPTION": "API for Online Store",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    'TAGS': [
+        {"name": "Auth", "description": "User authentication"},
+        {"name": "Notifications", "description": "Admin notifications"},
+        {"name": "Products", "description": "Product operations"},
+        {"name": "Categories", "description": "Category operations"},
+        {"name": "Cart", "description": "Cart operations"},
+        {"name": "Orders", "description": "Order operations"},
+        {"name": "Payments", "description": "Payment operations"},
+    ],
+    'SORT_OPERATIONS': True,
+}
 
 
 ROOT_URLCONF = 'Online_store.urls'

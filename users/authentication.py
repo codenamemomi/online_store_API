@@ -1,5 +1,6 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import AuthenticationFailed
+from .authentication_spectacular import CookieJWTAuthenticationScheme
 
 class CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
